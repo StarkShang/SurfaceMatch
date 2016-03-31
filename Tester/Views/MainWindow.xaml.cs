@@ -16,21 +16,16 @@ using ChartCPNTs.Views;
 using ChartCPNTs.Models;
 using ChartCPNTs.ViewModels;
 
-namespace Tester
+namespace Tester.Views
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MeshViewModel viewModel { get; set; }
-        public LegendModel legendModel { get; }
-
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
-            legendModel = new LegendModel(5, -1);
         }
     }
 }

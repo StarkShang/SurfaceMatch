@@ -1,14 +1,17 @@
-﻿<Window x:Class="Tester.MainWindow"
+﻿<Window x:Class="Tester.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tester"
         xmlns:catcpnt="clr-namespace:ChartCPNTs.Views;assembly=ChartCPNTs"
+        xmlns:vm="clr-namespace:Tester.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+    <Window.DataContext>
+        <vm:TesterViewModel x:Name="viewmodel"/>
+    </Window.DataContext>
     <Grid>
-        <catcpnt:LegendView Model="{Binding legendModel}">
-        </catcpnt:LegendView>
+        <catcpnt:LegendView Model="{Binding model}"/>
     </Grid>
 </Window>

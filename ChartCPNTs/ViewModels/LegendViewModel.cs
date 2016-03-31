@@ -6,16 +6,33 @@ namespace ChartCPNTs.ViewModels
 {
     public class LegendViewModel : ViewModelBase
     {
-        public LegendModel Model { get; set; }
+        private LegendModel model;
+        public LegendModel Model
+        {
+            set
+            {
+                model = value;
+                MinValue = string.Format("{0:F2}", model.MinValue);
+                MidValue = string.Format("{0:F2}", model.MidValue);
+                MaxValue = string.Format("{0:F2}", model.MaxValue);
+            }
+        }
 
         public string MinValue
         {
-            get { return string.Format("0:F2", Model.MinValue); }
+            get { return string.Format("{0:F2}", model.MinValue); }
             set { RaisePropertyChanged("MinValue"); }
         }
         public string MidValue
-        { get; set; }
-        public string MaxValue { get; set; }
+        {
+            get { return string.Format("{0:F2}", model.MidValue); }
+            set { RaisePropertyChanged("MidValue"); }
+        }
+        public string MaxValue
+        {
+            get { return string.Format("{0:F2}", model.MaxValue); }
+            set { RaisePropertyChanged("MaxValue"); }
+        }
         private Color minValueColor = Colors.Green;
         public Color MinValueColor { get { return minValueColor; } }
         private Color midValueColor = Colors.Blue;
@@ -36,7 +53,7 @@ namespace ChartCPNTs.ViewModels
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public LegendViewModel(LegendModel model)
+        public LegendViewModel()
         {
             if (IsInDesignMode)
             {
@@ -47,7 +64,7 @@ namespace ChartCPNTs.ViewModels
             }
             else
             {
-                Model = model;
+                model = new LegendModel();
             }
         }
 

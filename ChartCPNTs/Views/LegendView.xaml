@@ -7,6 +7,9 @@
              xmlns:vm="clr-namespace:ChartCPNTs.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <vm:LegendViewModel x:Name="ViewModel"></vm:LegendViewModel>
+    </UserControl.DataContext>
     <UserControl.Resources>
         <Style TargetType="Label">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
