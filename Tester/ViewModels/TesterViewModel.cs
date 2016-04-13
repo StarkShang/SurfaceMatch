@@ -10,6 +10,6 @@ namespace Tester.ViewModels
 {
     class TesterViewModel : ViewModelBase
     {
-        LegendModel model = new LegendModel(5,-1);
+        public ColorBarModel model { get; set; } = new ColorBarModel(10, -5);
     }
 }

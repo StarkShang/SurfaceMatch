@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChartCPNTs.Models
 {
-    public class LegendModel : ObservableObject
+    public class ColorBarModel : ObservableObject
     {
         /// <summary>
         /// 最大值
@@ -50,12 +50,12 @@ namespace ChartCPNTs.Models
         /// </summary>
         /// <param name="max">最大值</param>
         /// <param name="min">最小值</param>
-        public LegendModel(double max, double min)
+        public ColorBarModel(double max, double min)
         {
             maxValue = max;
             minValue = min;
             midValue = max * min < 0 ? 0 : (max + min) / 2;
         }
-        public LegendModel() { }
+        public ColorBarModel() { }
     }
 }

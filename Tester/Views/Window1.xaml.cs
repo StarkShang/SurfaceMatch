@@ -10,26 +10,27 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ChartCPNTs.Views;
 using ChartCPNTs.Models;
-using ChartCPNTs.ViewModels;
 
 namespace Tester.Views
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// Window1.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Window1 : Window
     {
-        public ColorBarModel model { get; set; } = new ChartCPNTs.Models.ColorBarModel(10, -5);
-
-        public MainWindow()
+        public Window1()
         {
             InitializeComponent();
-            //legend.Model = model;
-            //DataContext = this;
+
+            var data = new List<List<double>>()
+            {
+                new List<double>() { 1,2,3,4,5 },
+                new List<double>() { 2,3,4,5,6 }
+            };
+            var model = new MeshModel(data);
+            mesh.Model = model;
         }
     }
 }

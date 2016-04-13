@@ -13,6 +13,7 @@ namespace ChartCPNTs.Models
         {
             var max = data.Select(item => item.Max()).Max();
             var min = data.Select(item => item.Min()).Min();
+            Data = data;
         }
     }
 }

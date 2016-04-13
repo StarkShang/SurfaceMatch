@@ -4,34 +4,53 @@ using ChartCPNTs.Models;
 
 namespace ChartCPNTs.ViewModels
 {
-    public class LegendViewModel : ViewModelBase
+    public class ColorBarViewModel : ViewModelBase
     {
-        private LegendModel model;
-        public LegendModel Model
+        private Models.ColorBarModel model;
+        public ColorBarModel Model
         {
+            get { return model; }
             set
             {
                 model = value;
                 MinValue = string.Format("{0:F2}", model.MinValue);
                 MidValue = string.Format("{0:F2}", model.MidValue);
                 MaxValue = string.Format("{0:F2}", model.MaxValue);
+                MidPosition = (model.MaxValue - model.MidValue) / (model.MaxValue - model.MinValue);
+                FirstPartHeight = string.Format("{0}*", (model.MaxValue - model.MidValue) / (model.MaxValue - model.MinValue));
+                SecondPartHeight = string.Format("{0}*", (model.MidValue - model.MinValue) / (model.MaxValue - model.MinValue));
+                RaisePropertyChanged("Model");
             }
         }
-
+        private string minValue;
         public string MinValue
         {
-            get { return string.Format("{0:F2}", model.MinValue); }
-            set { RaisePropertyChanged("MinValue"); }
+            get { return minValue; }
+            set
+            {
+                minValue = value;
+                RaisePropertyChanged("MinValue");
+            }
         }
+        private string midValue;
         public string MidValue
         {
-            get { return string.Format("{0:F2}", model.MidValue); }
-            set { RaisePropertyChanged("MidValue"); }
+            get { return midValue; }
+            set
+            {
+                midValue = value;
+                RaisePropertyChanged("MidValue");
+            }
         }
+        private string maxValue;
         public string MaxValue
         {
-            get { return string.Format("{0:F2}", model.MaxValue); }
-            set { RaisePropertyChanged("MaxValue"); }
+            get { return maxValue; }
+            set
+            {
+                maxValue = value;
+                RaisePropertyChanged("MaxValue");
+            }
         }
         private Color minValueColor = Colors.Green;
         public Color MinValueColor { get { return minValueColor; } }
@@ -48,23 +67,49 @@ namespace ChartCPNTs.ViewModels
         public Color MinColor { set { minValueColor = value; minValueBrush = new SolidColorBrush(value); } }
         public Color MidColor { set { midValueColor = value; midValueBrush = new SolidColorBrush(value); } }
         public Color MaxColor { set { maxValueColor = value; maxValueBrush = new SolidColorBrush(value); } }
-        public double MidPosition { get; set; }
+        private double midPosition;
+        public double MidPosition
+        {
+            get { return midPosition; }
+            set
+            {
+                midPosition = value;
+                RaisePropertyChanged("MidPosition");
+            }
+        }
+        private string firstPartHeight;
+        public string FirstPartHeight
+        {
+            get { return firstPartHeight; }
+            set
+            {
+                firstPartHeight = value;
+                RaisePropertyChanged("FirstPartHeight");
+            }
+        }
+        private string secondPartHeight;
+        public string SecondPartHeight
+        {
+            get { return secondPartHeight; }
+            set
+            {
+                secondPartHeight = value;
+                RaisePropertyChanged("SecondPartHeight");
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public LegendViewModel()
+        public ColorBarViewModel()
         {
             if (IsInDesignMode)
             {
-                MinValue = "-0.5";
-                MidValue = "0";
-                MaxValue = "5.12";
-                MidPosition = 0.5;
+                Model = new Models.ColorBarModel(5, -1);
             }
             else
             {
-                model = new LegendModel();
+                //model = new LegendModel();
             }
         }
 
