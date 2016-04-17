@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
@@ -13,6 +14,9 @@ namespace ProjectCSharp
 {
     class CBFunctions
     {
+        [DllImport("LibClang.dll",EntryPoint = "calRelativeDis")]
+        public static extern void PassString(Node pts, int row, int col);
+
         public static UFSession theUFSession { get; set; }
         public static ListingWindow lw { get; set; }
         public static void customizedCBFunction()

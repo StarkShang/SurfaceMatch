@@ -72,6 +72,13 @@
       <Project>{c485c5a1-a892-4b98-adfd-35a8392bc69f}</Project>
       <Name>CoreLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LibClang\LibClang.vcxproj">
+      <Project>{37dac740-8b35-42e5-9964-b9a58edc392b}</Project>
+      <Name>LibClang</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
