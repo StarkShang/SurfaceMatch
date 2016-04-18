@@ -33,7 +33,7 @@ namespace MatchProcessor
                 return;
             }
             // 读取点数据
-            const int discreteNum = 10;
+            const int discreteNum = 501;
             var dMesh = new Types.Mesh(discreteNum, discreteNum);
             var rMesh = new Types.Mesh(discreteNum, discreteNum);
             for (int i = 0; i < discreteNum; i++)
@@ -56,28 +56,29 @@ namespace MatchProcessor
             }
             dBReader.Close();
             rBReader.Close();
-            //// Step 3.2 将曲面mesh转换成图
-            //var dGraph = dMesh.generateGraph();
-            //var rGraph = rMesh.generateGraph();
-            //// Step 3.3 确定离散映射点
-            //var mapNum = 5;
-            //var step = uDNum / mapNum;
-            //var dMapPoint = new List<Tuple<int, int>>();
-            //var rMapPoint = new List<Tuple<int, int>>();
-            //for (int i = 0; i < mapNum; i++)
-            //{
-            //    for (int j = 0; j < mapNum; j++)
-            //    {
-            //        dMapPoint.Add(new Tuple<int, int>((i + 1) * step, (j + 1) * step));
-            //        rMapPoint.Add(new Tuple<int, int>((i + 1) * step, (j + 1) * step));
-            //    }
-            //}
-            //// Step 3.4 计算理想曲面上各个边界点到映射点的距离
-            //var dDist = new List<Tuple<double, double, double>>();
-            //foreach (var item in dMapPoint)
-            //{
-            //    dDist.Add(dGraph.getGeodesics(item.Item1, item.Item2, step));
-            //}
+            // Step 3.2 将曲面mesh转换成图
+            var dGraph = dMesh.generateGraph();
+            var rGraph = rMesh.generateGraph();
+            // Step 3.3 确定离散映射点
+            var mapNum = 9;
+            var step = discreteNum / (mapNum + 1);
+            var dMapPoint = new List<Tuple<int, int>>();
+            var rMapPoint = new List<Tuple<int, int>>();
+            for (int i = 0; i < mapNum; i++)
+            {
+                for (int j = 0; j < mapNum; j++)
+                {
+                    dMapPoint.Add(new Tuple<int, int>((i + 1) * step, (j + 1) * step));
+                    rMapPoint.Add(new Tuple<int, int>((i + 1) * step, (j + 1) * step));
+                }
+            }
+            // Step 3.4 计算理想曲面上各个边界点到映射点的距离
+            var dDist = new List<Tuple<double, double, double>>();
+            foreach (var item in dMapPoint)
+            {
+                var dist = dGraph.getGeodesics(item.Item1, item.Item2, step);
+                dDist.Add(dist);
+            }
             //// Step 3.5 生成映射点
             //for (int i = 0; i < dDist.Count; i++)
             //{

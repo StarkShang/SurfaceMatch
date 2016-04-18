@@ -150,8 +150,8 @@ type Mesh (row, col) =
                 + (pown (pt1.Z - pt2.Z) 2))
         member self.generateGraph() =
             let graph = new Graph(row, col)
-            for i = 0 to row do
-                for j = 0 to col do
+            for i = 0 to row-1 do
+                for j = 0 to col-1 do
                     let mutable left = 0.0
                     let mutable top = 0.0
                     let mutable right = 0.0

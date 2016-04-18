@@ -58,10 +58,10 @@ namespace test
             double[] rUVMinMax = new double[4];
             theUFSession.Evalsf.Initialize(dSurf,out evaluator);
             theUFSession.Evalsf.AskFaceUvMinmax(evaluator, dUVMinMax);
-            theUFSession.Evalsf.Initialize(dSurf, out evaluator);
+            theUFSession.Evalsf.Initialize(rSurf, out evaluator);
             theUFSession.Evalsf.AskFaceUvMinmax(evaluator, rUVMinMax);
             // Step 3 : 获得初始采样点集
-            const int uDNum = 10, vDNum = 10;
+            const int uDNum = 501, vDNum = 501;
             var dUVDomain = new UVDomain(dUVMinMax);
             var rUVDomain = new UVDomain(rUVMinMax);
             var dUVPoints = dUVDomain.discretizeUVDomain(uDNum, vDNum);
@@ -76,12 +76,15 @@ namespace test
                 {
                     var dParam = dUVPoints[i * uDNum + j];
                     var point = getPtOnSurface(dParam, dSurf);
+                    Tag pt;
+                    theUFSession.Curve.CreatePoint(point, out pt);
                     dBW.Write(point[0]);
                     dBW.Write(point[1]);
                     dBW.Write(point[2]);
 
                     var rParam = rUVPoints[i * uDNum + j];
                     point = getPtOnSurface(rParam, rSurf);
+                    theUFSession.Curve.CreatePoint(point, out pt);
                     rBW.Write(point[0]);
                     rBW.Write(point[1]);
                     rBW.Write(point[2]);
@@ -94,15 +97,9 @@ namespace test
 
         static double[] getPtOnSurface(UVParam param, Tag surf)
         {
-            Tag ptFeatureId, ptId;
-            Tag uScalar, vScalar;
-            theUFSession.So.CreateScalarDouble(surf, UFSo.UpdateOption.DontUpdate, param.U, out uScalar);
-            theUFSession.So.CreateScalarDouble(surf, UFSo.UpdateOption.DontUpdate, param.V, out vScalar);
-            theUFSession.Point.CreateOnSurface(surf, uScalar, vScalar, out ptFeatureId);
-            theUFSession.Point.AskPointOutput(ptFeatureId, out ptId);
-            double[] coordinate = new double[3] { 0, 0, 0 };
-            theUFSession.Curve.AskPointData(ptId, coordinate);
-            return coordinate;
+            ModlSrfValue value;
+            theUFSession.Modl.EvaluateFace(surf, 33, new double[] { param.U, param.V }, out value);
+            return value.srf_pos;
         }
 
         static Tuple<double,double,double>[,] getGeodesic(Types.Graph graph, int mapNum, int step)

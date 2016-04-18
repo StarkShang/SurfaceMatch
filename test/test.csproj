@@ -81,12 +81,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) E:\GitHub\UGProgram\startup\$(TargetFileName)
-copy $(TargetDir)\CoreLib.dll E:\GitHub\UGProgram\startup\CoreLib.dll</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) C:\Caches\GitHub\UGProgram\startup\$(TargetFileName)
+copy $(TargetDir)CoreLib.dll C:\Caches\GitHub\UGProgram\startup\CoreLib.dll</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>copy $(TargetDir)realPoints E:\GitHub\UGProgram\programs\SurfaceMatch\MatchProcessor\bin\Debug\realPoints
-copy $(TargetDir)designPoints E:\GitHub\UGProgram\programs\SurfaceMatch\MatchProcessor\bin\Debug\designPoints</PreBuildEvent>
+    <PreBuildEvent>copy $(TargetDir)designPoints $(SolutionDir)MatchProcessor\bin\Debug\designPoints
+copy $(TargetDir)realPoints $(SolutionDir)MatchProcessor\bin\Debug\realPoints</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

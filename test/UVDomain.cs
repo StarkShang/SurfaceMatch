@@ -52,13 +52,13 @@ namespace test
             // 离散U值
             for (int i = 0; i < uDNum; i++)
             {
-                var uValue = (uDNum - i) / (double)(uDNum - 1) * minU + i / (double)(uDNum - 1) * maxU;
+                var uValue = (uDNum - i - 1) / (double)(uDNum - 1) * minU + i / (double)(uDNum - 1) * maxU;
                 discreteU.Add(uValue);
             }
             // 离散V值
             for (int i = 0; i < vDNum; i++)
             {
-                var vValue = (vDNum - i) / (double)(vDNum - 1) * minV + i / (double)(vDNum - 1) * maxV;
+                var vValue = (vDNum - i - 1) / (double)(vDNum - 1) * minV + i / (double)(vDNum - 1) * maxV;
                 discreteV.Add(vValue);
             }
             // 获得离散点
