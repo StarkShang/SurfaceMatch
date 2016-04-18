@@ -1,47 +1,6 @@
 ﻿module Geodesic
-type Vertex (left:float,top:float,right:float,bottom:float) as self =
-    class
-        let left = left
-        let top = top
-        let right = right
-        let bottom = bottom
-        member self.Left 
-            with get() = left
-        member self.Top 
-            with get() = top
-        member self.Right 
-            with get() = right
-        member self.Bottom 
-            with get() = bottom
-    end
 
-
-type Graph (rowNumber:int,colNumber:int) as self =
-    class
-        let rowNumber = rowNumber
-        let colNumber = colNumber
-        let graph = Array2D.create rowNumber colNumber (new Vertex(0.0,0.0,0.0,0.0))
-
-        member self.GetAdjacent(pt:(int*int)) =
-            let mutable rst = []
-            let row = pt|>fst
-            let col = pt|>snd
-            if row > 0 then
-                rst<-(graph.[row,col].Top,(row-1,col))::rst
-            if row < rowNumber-1 then
-                rst<-(graph.[row,col].Bottom,(row+1,col))::rst
-            if col > 0 then 
-                rst<-(graph.[row,col].Left,(row,col-1))::rst
-            if col < colNumber-1 then 
-                rst<-(graph.[row,col].Right,(row,col+1))::rst
-            rst
-        // 往图中添加元素
-        member self.AddVertex(pt:(Vertex*(int*int))) =
-            let value = pt|>fst
-            let row = pt|>snd|>fst
-            let col = pt|>snd|>snd
-            graph.[row,col]<-value
-    end
+open Types
 
 let GetShortestPath (graph:Graph) (startPt:(int*int)) (endPt:(int*int)) =
     let mutable vertexSet = [(0.0,startPt)]

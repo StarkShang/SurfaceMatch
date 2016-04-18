@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{61457E4C-2B28-4598-A3EF-B3BE5147A25A}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>test</RootNamespace>
     <AssemblyName>test</AssemblyName>
@@ -31,6 +31,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NXOpen">
@@ -72,15 +75,19 @@
       <Project>{c485c5a1-a892-4b98-adfd-35a8392bc69f}</Project>
       <Name>CoreLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LibClang\LibClang.vcxproj">
-      <Project>{37dac740-8b35-42e5-9964-b9a58edc392b}</Project>
-      <Name>LibClang</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) E:\GitHub\UGProgram\startup\$(TargetFileName)
+copy $(TargetDir)\CoreLib.dll E:\GitHub\UGProgram\startup\CoreLib.dll</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>copy $(TargetDir)realPoints E:\GitHub\UGProgram\programs\SurfaceMatch\MatchProcessor\bin\Debug\realPoints
+copy $(TargetDir)designPoints E:\GitHub\UGProgram\programs\SurfaceMatch\MatchProcessor\bin\Debug\designPoints</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

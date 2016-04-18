@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NXOpen;
 using NXOpen.Utilities;
 using NXOpen.UF;
-using ProjectCSharp;
+using test;
 
 namespace test
 {

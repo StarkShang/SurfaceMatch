@@ -5,18 +5,15 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using System.IO;
 using NXOpen;
 using NXOpen.Utilities;
 using NXOpen.UF;
-using ProjectCSharp;
 
-namespace ProjectCSharp
+namespace test
 {
     class CBFunctions
     {
-        [DllImport("LibClang.dll",EntryPoint = "calRelativeDis")]
-        public static extern void PassString(Node pts, int row, int col);
-
         public static UFSession theUFSession { get; set; }
         public static ListingWindow lw { get; set; }
         public static void customizedCBFunction()
@@ -64,13 +61,61 @@ namespace ProjectCSharp
             theUFSession.Evalsf.Initialize(dSurf, out evaluator);
             theUFSession.Evalsf.AskFaceUvMinmax(evaluator, rUVMinMax);
             // Step 3 : 获得初始采样点集
-            const int uDNum = 1000, vDNum = 1000;
+            const int uDNum = 10, vDNum = 10;
             var dUVDomain = new UVDomain(dUVMinMax);
             var rUVDomain = new UVDomain(rUVMinMax);
             var dUVPoints = dUVDomain.discretizeUVDomain(uDNum, vDNum);
             var rUVPoints = rUVDomain.discretizeUVDomain(uDNum, vDNum);
-            //// Step 3.1 计算点和点之间的欧氏距离
-            
+            // Step 3.1 获得曲面上的采样点
+            BinaryWriter dBW = new BinaryWriter(new FileStream("designPoints", FileMode.Create));
+            BinaryWriter rBW = new BinaryWriter(new FileStream("realPoints", FileMode.Create));
+
+            for (int i = 0; i < uDNum; i++)
+            {
+                for (int j = 0; j < vDNum; j++)
+                {
+                    var dParam = dUVPoints[i * uDNum + j];
+                    var point = getPtOnSurface(dParam, dSurf);
+                    dBW.Write(point[0]);
+                    dBW.Write(point[1]);
+                    dBW.Write(point[2]);
+
+                    var rParam = rUVPoints[i * uDNum + j];
+                    point = getPtOnSurface(rParam, rSurf);
+                    rBW.Write(point[0]);
+                    rBW.Write(point[1]);
+                    rBW.Write(point[2]);
+                }
+            }
+            dBW.Close();
+            rBW.Close();
+        }
+
+
+        static double[] getPtOnSurface(UVParam param, Tag surf)
+        {
+            Tag ptFeatureId, ptId;
+            Tag uScalar, vScalar;
+            theUFSession.So.CreateScalarDouble(surf, UFSo.UpdateOption.DontUpdate, param.U, out uScalar);
+            theUFSession.So.CreateScalarDouble(surf, UFSo.UpdateOption.DontUpdate, param.V, out vScalar);
+            theUFSession.Point.CreateOnSurface(surf, uScalar, vScalar, out ptFeatureId);
+            theUFSession.Point.AskPointOutput(ptFeatureId, out ptId);
+            double[] coordinate = new double[3] { 0, 0, 0 };
+            theUFSession.Curve.AskPointData(ptId, coordinate);
+            return coordinate;
+        }
+
+        static Tuple<double,double,double>[,] getGeodesic(Types.Graph graph, int mapNum, int step)
+        {
+            var distance = new Tuple<double, double, double>[mapNum, mapNum];
+            for (int i = 0; i < mapNum; i++)
+            {
+                for (int j = 0; j < mapNum; j++)
+                {
+                    distance[i, j] = graph.getGeodesics((i + 1) * step, (j + 1) * step, step);
+                }
+            }
+            return distance;
         }
 
         /// <summary>
@@ -208,28 +253,6 @@ namespace ProjectCSharp
             mobiusMap.ControlParams = -2 * (mobiusMap.ControlParams + (-0.1)*deviation);
         }
 
-        static void validateLength(double[] data)
-        {
-            var window = new ChartWindow(data);
-            window.Show();
-        }
-
-        static void paramDomain(List<UVParam> dUVParams, List<UVParam> rUVParams)
-        {
-            var origin = new List<Complex>();
-            foreach (var item in dUVParams)
-            {
-                origin.Add(item.ToComplex());
-            }
-            var modified = new List<Complex>();
-            foreach (var item in rUVParams)
-            {
-                modified.Add(item.ToComplex());
-            }
-            var window = new ChartWindow(origin.ToArray(), modified.ToArray());
-            window.Show();
-        }
-
         static void showMesh(UVDomain domain, Tag surf, out List<Tag> pts, out List<Tag> uCurves, out List<Tag> vCurves)
         {
             // 计算参数点在曲面上的对应点
@@ -346,10 +369,6 @@ namespace ProjectCSharp
             vArcLength = vCruvesLength;
         }
 
-        static void showError(List<List<double>> uArcLengthError, List<List<double>> vArcLengthError)
-        {
-            var window = new ChartWindow(uArcLengthError, vArcLengthError);
-            window.Show();
-        }
+        
     }
 }

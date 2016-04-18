@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 
 
-namespace ProjectCSharp
+namespace test
 {
     static class ExtendMethod
     {
