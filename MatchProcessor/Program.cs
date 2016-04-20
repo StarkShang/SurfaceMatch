@@ -79,61 +79,61 @@ namespace MatchProcessor
                 var dist = dGraph.getGeodesics(item.Item1, item.Item2, step);
                 dDist.Add(dist);
             }
-            //// Step 3.5 生成映射点
-            //for (int i = 0; i < dDist.Count; i++)
-            //{
-            //    while (true)
-            //    {
-            //        var dist0 = rGraph.getGeodesics(rMapPoint[i].Item1, rMapPoint[i].Item2, step);
-            //        var dist1 = rGraph.getGeodesics(rMapPoint[i].Item1 - 1, rMapPoint[i].Item2, step);
-            //        var dist2 = rGraph.getGeodesics(rMapPoint[i].Item1, rMapPoint[i].Item2 + 1, step);
-            //        var dist3 = rGraph.getGeodesics(rMapPoint[i].Item1 + 1, rMapPoint[i].Item2, step);
-            //        var dist4 = rGraph.getGeodesics(rMapPoint[i].Item1, rMapPoint[i].Item2 - 1, step);
+            // Step 3.5 生成映射点
+            for (int i = 0; i < dDist.Count; i++)
+            {
+                while (true)
+                {
+                    var dist0 = rGraph.getGeodesics(rMapPoint[i].Item1, rMapPoint[i].Item2, step);
+                    var dist1 = rGraph.getGeodesics(rMapPoint[i].Item1 - 1, rMapPoint[i].Item2, step);
+                    var dist2 = rGraph.getGeodesics(rMapPoint[i].Item1, rMapPoint[i].Item2 + 1, step);
+                    var dist3 = rGraph.getGeodesics(rMapPoint[i].Item1 + 1, rMapPoint[i].Item2, step);
+                    var dist4 = rGraph.getGeodesics(rMapPoint[i].Item1, rMapPoint[i].Item2 - 1, step);
 
-            //        var target0 = Math.Sqrt(
-            //            (dist0.Item1 - dDist[i].Item1) * (dist0.Item1 - dDist[i].Item1)
-            //            + (dist0.Item2 - dDist[i].Item2) * (dist0.Item2 - dDist[i].Item2)
-            //            + (dist0.Item3 - dDist[i].Item3) * (dist0.Item3 - dDist[i].Item3));
-            //        var target1 = Math.Sqrt(
-            //            (dist1.Item1 - dDist[i].Item1) * (dist1.Item1 - dDist[i].Item1)
-            //            + (dist1.Item2 - dDist[i].Item2) * (dist1.Item2 - dDist[i].Item2)
-            //            + (dist1.Item3 - dDist[i].Item3) * (dist1.Item3 - dDist[i].Item3));
-            //        var target2 = Math.Sqrt(
-            //            (dist2.Item1 - dDist[i].Item1) * (dist2.Item1 - dDist[i].Item1)
-            //            + (dist2.Item2 - dDist[i].Item2) * (dist2.Item2 - dDist[i].Item2)
-            //            + (dist2.Item3 - dDist[i].Item3) * (dist2.Item3 - dDist[i].Item3));
-            //        var target3 = Math.Sqrt(
-            //            (dist3.Item1 - dDist[i].Item1) * (dist3.Item1 - dDist[i].Item1)
-            //            + (dist3.Item2 - dDist[i].Item2) * (dist3.Item2 - dDist[i].Item2)
-            //            + (dist3.Item3 - dDist[i].Item3) * (dist3.Item3 - dDist[i].Item3));
-            //        var target4 = Math.Sqrt(
-            //            (dist4.Item1 - dDist[i].Item1) * (dist4.Item1 - dDist[i].Item1)
-            //            + (dist4.Item2 - dDist[i].Item2) * (dist4.Item2 - dDist[i].Item2)
-            //            + (dist4.Item3 - dDist[i].Item3) * (dist4.Item3 - dDist[i].Item3));
+                    var target0 = Math.Sqrt(
+                        (dist0.Item1 - dDist[i].Item1) * (dist0.Item1 - dDist[i].Item1)
+                        + (dist0.Item2 - dDist[i].Item2) * (dist0.Item2 - dDist[i].Item2)
+                        + (dist0.Item3 - dDist[i].Item3) * (dist0.Item3 - dDist[i].Item3));
+                    var target1 = Math.Sqrt(
+                        (dist1.Item1 - dDist[i].Item1) * (dist1.Item1 - dDist[i].Item1)
+                        + (dist1.Item2 - dDist[i].Item2) * (dist1.Item2 - dDist[i].Item2)
+                        + (dist1.Item3 - dDist[i].Item3) * (dist1.Item3 - dDist[i].Item3));
+                    var target2 = Math.Sqrt(
+                        (dist2.Item1 - dDist[i].Item1) * (dist2.Item1 - dDist[i].Item1)
+                        + (dist2.Item2 - dDist[i].Item2) * (dist2.Item2 - dDist[i].Item2)
+                        + (dist2.Item3 - dDist[i].Item3) * (dist2.Item3 - dDist[i].Item3));
+                    var target3 = Math.Sqrt(
+                        (dist3.Item1 - dDist[i].Item1) * (dist3.Item1 - dDist[i].Item1)
+                        + (dist3.Item2 - dDist[i].Item2) * (dist3.Item2 - dDist[i].Item2)
+                        + (dist3.Item3 - dDist[i].Item3) * (dist3.Item3 - dDist[i].Item3));
+                    var target4 = Math.Sqrt(
+                        (dist4.Item1 - dDist[i].Item1) * (dist4.Item1 - dDist[i].Item1)
+                        + (dist4.Item2 - dDist[i].Item2) * (dist4.Item2 - dDist[i].Item2)
+                        + (dist4.Item3 - dDist[i].Item3) * (dist4.Item3 - dDist[i].Item3));
 
-            //        var minDist = new double[] { target0, target1, target2, target3, target4 }.Min();
-            //        if (minDist == target0)
-            //        {
-            //            break;
-            //        }
-            //        else if (minDist == target1)
-            //        {
-            //            rMapPoint[i] = new Tuple<int, int>(rMapPoint[i].Item1 - 1, rMapPoint[i].Item2);
-            //        }
-            //        else if (minDist == target2)
-            //        {
-            //            rMapPoint[i] = new Tuple<int, int>(rMapPoint[i].Item1, rMapPoint[i].Item2 + 1);
-            //        }
-            //        else if (minDist == target3)
-            //        {
-            //            rMapPoint[i] = new Tuple<int, int>(rMapPoint[i].Item1 + 1, rMapPoint[i].Item2);
-            //        }
-            //        else if (minDist == target4)
-            //        {
-            //            rMapPoint[i] = new Tuple<int, int>(rMapPoint[i].Item1, rMapPoint[i].Item2 - 1);
-            //        }
-            //    }
-            //}
+                    var minDist = new double[] { target0, target1, target2, target3, target4 }.Min();
+                    if (minDist == target0)
+                    {
+                        break;
+                    }
+                    else if (minDist == target1)
+                    {
+                        rMapPoint[i] = new Tuple<int, int>(rMapPoint[i].Item1 - 1, rMapPoint[i].Item2);
+                    }
+                    else if (minDist == target2)
+                    {
+                        rMapPoint[i] = new Tuple<int, int>(rMapPoint[i].Item1, rMapPoint[i].Item2 + 1);
+                    }
+                    else if (minDist == target3)
+                    {
+                        rMapPoint[i] = new Tuple<int, int>(rMapPoint[i].Item1 + 1, rMapPoint[i].Item2);
+                    }
+                    else if (minDist == target4)
+                    {
+                        rMapPoint[i] = new Tuple<int, int>(rMapPoint[i].Item1, rMapPoint[i].Item2 - 1);
+                    }
+                }
+            }
             Console.ReadKey();
 
         }

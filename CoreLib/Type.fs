@@ -1,11 +1,16 @@
 ﻿module Types
 
-type Vertex (left:float,top:float,right:float,bottom:float) as self =
+type Vertex (left:float,top:float,right:float,bottom:float,leftTop:float,rightTop:float,leftBottom:float,rightBottom:float) as self =
     class
         let left = left
         let top = top
         let right = right
         let bottom = bottom
+        let leftTop = leftTop
+        let rightTop = rightTop
+        let leftBottom = leftBottom
+        let rightBottom = rightBottom
+
         member self.Left 
             with get() = left
         member self.Top 
@@ -14,26 +19,46 @@ type Vertex (left:float,top:float,right:float,bottom:float) as self =
             with get() = right
         member self.Bottom 
             with get() = bottom
+        member self.LeftTop
+            with get() = leftTop
+        member self.RightTop
+            with get() = rightTop
+        member self.LeftBottom
+            with get() = leftBottom
+        member self.RightBottom
+            with get() = rightBottom
     end
 
+// 图结构
 type Graph (rowNumber:int,colNumber:int) as self =
     class
         let rowNumber = rowNumber
         let colNumber = colNumber
-        let graph = Array2D.create rowNumber colNumber (new Vertex(0.0,0.0,0.0,0.0))
+        let graph = Array2D.create rowNumber colNumber (new Vertex(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0))
         // 获得周围点
         member self.GetAdjacent(pt:(int*int)) =
             let mutable rst = []
             let row = pt|>fst
             let col = pt|>snd
-            if row > 0 then
+
+            // 若不是上边界上的点，则取出上面的点
+            if (row>0) then
                 rst<-(graph.[row,col].Top,(row-1,col))::rst
-            if row < rowNumber-1 then
-                rst<-(graph.[row,col].Bottom,(row+1,col))::rst
-            if col > 0 then 
-                rst<-(graph.[row,col].Left,(row,col-1))::rst
-            if col < colNumber-1 then 
-                rst<-(graph.[row,col].Right,(row,col+1))::rst
+                // 若此时不是做边界上的点，则取出左上点
+                if (col>0) then rst<-(graph.[row,col].LeftTop,(row-1,col-1))::rst
+                // 若此时不是做边界上的点，则取出左上点
+                if (col<colNumber-1) then rst<-(graph.[row,col].RightTop,(row-1,col+1))::rst
+            // 若不是下边界上的点，则取出下面的点
+            if (row<rowNumber-1) then
+                rst<-(graph.[row,col].Top,(row+1,col))::rst
+                // 若此时不是做边界上的点，则取出左下点
+                if (col>0) then rst<-(graph.[row,col].LeftBottom,(row+1,col-1))::rst
+                // 若此时不是做边界上的点，则取出左下点
+                if (col<colNumber-1) then rst<-(graph.[row,col].RightBottom,(row+1,col+1))::rst
+            // 若不是左边界上的点，则取出左面的点
+            if (col>0) then rst<-(graph.[row,col].Left,(row,col-1))::rst
+            // 若不是右边界上的点，则取出右面的点
+            if (col<colNumber-1) then rst<-(graph.[row,col].Right,(row,col+1))::rst
             rst
         // 往图中添加元素
         member public self.AddVertex((pt:Vertex),(row:int),(col:int)) =
@@ -58,7 +83,6 @@ type Graph (rowNumber:int,colNumber:int) as self =
                         let nextDist = (pt|>fst) + cost
                         let there = pt|>snd
                         // 发现更短路径时，更新dist[]并添加到vertexSet
-                
                         if (there,dist|>Array.unzip|>snd)||>Array.contains then
                             let thereDistIndex = dist|>Array.findIndex(fun item->((item|>snd|>fst=(there|>fst))&&(item|>snd|>snd=(there|>snd))))
                             if (dist.[thereDistIndex]|>fst) > nextDist then
@@ -71,8 +95,10 @@ type Graph (rowNumber:int,colNumber:int) as self =
                                 vertexSet<-(nextDist,there)::vertexSet
                 vertexSet<-vertexSet|>List.sortBy(fun elem->(elem|>fst))
             record<-record|>List.rev
+            let rcd = record|>List.toArray
             let rst = dist|>Array.find(fun item->((item|>snd|>fst)=(endPt|>fst))&&((item|>snd|>snd)=(endPt|>snd)))|>fst
             rst
+        //给定一个点获取它到周围三个定点的测地线
         member public self.getGeodesics(row:int, col:int, step:int) = 
             match row,col with
             |(_,_) when(row=col&&row+col<rowNumber) -> 
@@ -122,6 +148,7 @@ type Graph (rowNumber:int,colNumber:int) as self =
                 (dist1, dist2, dist3)
     end
 
+// 记录空间中的点
 type Node (x:float, y:float, z:float) =
     class
         let x = x;
@@ -156,15 +183,29 @@ type Mesh (row, col) =
                     let mutable top = 0.0
                     let mutable right = 0.0
                     let mutable bottom = 0.0
-                    if i > 0 then 
-                        top <- self.calEuclidDist((mesh.[i,j]), (mesh.[i-1,j]))
-                    if i < row - 1 then
-                        bottom <- self.calEuclidDist((mesh.[i,j]), (mesh.[i+1,j]))
-                    if j > 0 then
-                        left <- self.calEuclidDist((mesh.[i,j]), (mesh.[i,j-1]))
-                    if j < col - 1 then
-                        right <- self.calEuclidDist((mesh.[i,j]), (mesh.[i,j+1]))
-                    let vertex = new Vertex(left, top, right, bottom)
+                    let mutable leftTop = 0.0
+                    let mutable rightTop = 0.0
+                    let mutable leftBottom = 0.0
+                    let mutable rightBottom = 0.0
+                    // 若不是上边界上的点，则存在上面的距离
+                    if (i>0) then
+                        top <- self.calEuclidDist(mesh.[i,j],mesh.[i-1,j])
+                        // 若此时不是做边界上的点，则存在左上距离
+                        if (j>0) then leftTop <- self.calEuclidDist(mesh.[i,j],mesh.[i-1,j-1])
+                        // 若此时不是做边界上的点，则存在左上距离
+                        if (j<col-1) then rightTop <- self.calEuclidDist(mesh.[i,j],mesh.[i-1,j+1])
+                    // 若不是下边界上的点，则存在下面的距离
+                    if (i<row-1) then
+                        bottom <- self.calEuclidDist(mesh.[i,j],mesh.[i+1,j])
+                        // 若此时不是做边界上的点，则存在左下距离
+                        if (j>0) then leftBottom <- self.calEuclidDist(mesh.[i,j],mesh.[i+1,j-1])
+                        // 若此时不是做边界上的点，则存在左下距离
+                        if (j<col-1) then rightBottom <- self.calEuclidDist(mesh.[i,j],mesh.[i+1,j+1])
+                    // 若不是左边界上的点，则存在左面的距离
+                    if (j>0) then left <- self.calEuclidDist(mesh.[i,j],mesh.[i,j-1])
+                    // 若不是右边界上的点，则存在右面的距离
+                    if (j<col-1) then right <- self.calEuclidDist(mesh.[i,j],mesh.[i,j+1])
+                    let vertex = new Vertex(left, top, right, bottom, leftTop, rightTop, leftBottom, rightBottom)
                     graph.AddVertex(vertex, i, j)
             graph
     end
